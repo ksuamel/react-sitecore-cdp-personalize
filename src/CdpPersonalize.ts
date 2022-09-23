@@ -188,6 +188,12 @@ export class CdpPersonalize {
     document.body.appendChild(script());
   };
 
+  trackPage = (): Promise<eventCreateResponse> => {
+    return this.eventCreate({
+      type: 'VIEW',
+    });
+  };
+
   getBrowserId = (): Promise<string> => {
     return new Promise<string>(async resolve => {
       this.waitForBoxever().then(() => {
@@ -203,6 +209,40 @@ export class CdpPersonalize {
     });
   };
 
+  identifyByEmail = (
+    email: string,
+    additionalData?: Record<string, unknown>
+  ): Promise<eventCreateResponse> => {
+    const finalPayload = {
+      email: email,
+      ...additionalData,
+    };
+    return this.identifyByProvider('email', email, finalPayload);
+  };
+
+  identifyByProvider = (
+    provider: string,
+    id: string,
+    additionalData?: Record<string, unknown>
+  ): Promise<eventCreateResponse> => {
+    const identifyEvent: Record<string, unknown> = {
+      type: 'IDENTITY',
+      identifiers: [
+        {
+          provider: provider,
+          id: id,
+        },
+      ],
+    };
+
+    let finalPayload = identifyEvent;
+    if (additionalData) {
+      finalPayload = { ...identifyEvent, ...additionalData };
+    }
+
+    return this.eventCreate(finalPayload);
+  };
+
   eventCreate = (
     event: Record<string, unknown>
   ): Promise<eventCreateResponse> => {
@@ -212,7 +252,7 @@ export class CdpPersonalize {
           page: window.location.pathname + window.location.search,
           currency: this.currency,
           pos: this.pointOfSale,
-          browserId: await this.getBrowserId(),
+          browser_id: await this.getBrowserId(),
           channel: this.channel,
           language: this.language,
           ...event,
