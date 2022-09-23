@@ -112,6 +112,9 @@ export class CdpPersonalize {
   private pointOfSale!: string;
   private webFlowTarget!: string;
   private libraryVersion: string = '1.4.9';
+  private currency: string = 'USD';
+  private channel: string = 'WEB';
+  private language: string = 'EN';
 
   private scriptId: string = 'cdpPersonalizeScript';
 
@@ -125,7 +128,10 @@ export class CdpPersonalize {
     cookieDomain: string,
     pointOfSale: string,
     webFlowTarget: string,
-    libraryVersion?: string
+    libraryVersion?: string,
+    currency?: string,
+    channel?: string,
+    langauge?: string
   ): void => {
     this.clientKey = clientKey;
     this.targetApi = targetApi;
@@ -134,6 +140,15 @@ export class CdpPersonalize {
     this.webFlowTarget = webFlowTarget;
     if (libraryVersion) {
       this.libraryVersion = libraryVersion;
+    }
+    if (currency) {
+      this.currency = currency;
+    }
+    if (channel) {
+      this.channel = channel;
+    }
+    if (langauge) {
+      this.language = langauge;
     }
   };
 
@@ -173,8 +188,12 @@ export class CdpPersonalize {
     document.body.appendChild(script());
   };
 
-  getBrowserId = (): string => {
-    return this.getCookieValue(`bid_${this.clientKey}`);
+  getBrowserId = (): Promise<string> => {
+    return new Promise<string>(async resolve => {
+      this.waitForBoxever().then(() => {
+        resolve(window.Boxever.getID());
+      });
+    });
   };
 
   getGuestRef = (): Promise<string> => {
@@ -188,26 +207,39 @@ export class CdpPersonalize {
     event: Record<string, unknown>
   ): Promise<eventCreateResponse> => {
     return new Promise<eventCreateResponse>(resolve => {
-      window.Boxever.eventCreate(
-        event,
-        data => {
-          resolve(data);
-        },
-        'json'
-      );
+      this.waitForBoxever().then(async () => {
+        const eventPayload = {
+          page: window.location.pathname + window.location.search,
+          currency: this.currency,
+          pos: this.pointOfSale,
+          browserId: await this.getBrowserId(),
+          channel: this.channel,
+          language: this.language,
+          ...event,
+        };
+
+        window.Boxever.eventCreate(
+          eventPayload,
+          data => {
+            resolve(data);
+          },
+          'json'
+        );
+      });
     });
   };
 
-  browserShow = (browserId?: string): Promise<browserShowResponse> => {
-    const bid = browserId ?? this.getBrowserId();
-
+  browserShow = async (browserId?: string): Promise<browserShowResponse> => {
     return new Promise<browserShowResponse>(resolve => {
-      window.Boxever.browserShow(
-        bid,
-        this.clientKey,
-        data => resolve(data),
-        'json'
-      );
+      this.waitForBoxever().then(async () => {
+        const bid = browserId ?? (await this.getBrowserId());
+        window.Boxever.browserShow(
+          bid,
+          this.clientKey,
+          data => resolve(data),
+          'json'
+        );
+      });
     });
   };
 
@@ -240,10 +272,22 @@ export class CdpPersonalize {
     return true;
   };
 
+  private waitForBoxever = (): Promise<void> => {
+    return new Promise<void>(async resolve => {
+      while (
+        !window.Boxever ||
+        window.Boxever.getID() === 'anonymous' ||
+        window._boxeverq
+      ) {
+        console.log(`Boxever is not ready yet. Waiting 100ms before retrying.`);
+        await new Promise(r => setTimeout(r, 100));
+      }
+
+      resolve();
+    });
+  };
+
   private error = (message: string) => {
     console.error(`react-sitecore-cdp-personalize: ${message}`);
   };
-
-  private getCookieValue = (name: string) =>
-    document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || '';
 }
