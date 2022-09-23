@@ -277,7 +277,7 @@ export class CdpPersonalize {
       while (
         !window.Boxever ||
         window.Boxever.getID() === 'anonymous' ||
-        window._boxeverq
+        !window._boxeverq
       ) {
         console.log(`Boxever is not ready yet. Waiting 100ms before retrying.`);
         await new Promise(r => setTimeout(r, 100));
