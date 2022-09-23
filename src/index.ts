@@ -15,14 +15,14 @@ class CdpPersonalize {
     console.log('Initialized');
   }
 
-  initialize(
+  initialize = (
     clientKey: string,
     targetApi: string,
     cookieDomain: string,
     pointOfSale: string,
     webFlowTarget: string,
     libraryVersion?: string
-  ) {
+  ): void => {
     this.clientKey = clientKey;
     this.targetApi = targetApi;
     this.cookieDomain = cookieDomain;
@@ -31,9 +31,9 @@ class CdpPersonalize {
     if (libraryVersion) {
       this.libraryVersion = libraryVersion;
     }
-  }
+  };
 
-  renderScript = () => {
+  renderScript = (): void => {
     if (!this.isInitialized) {
       this.error('Initialize before attempting to render the script.');
     }
@@ -69,7 +69,7 @@ class CdpPersonalize {
     document.body.appendChild(script());
   };
 
-  private isInitialized = () => {
+  private isInitialized = (): boolean => {
     if (!this.clientKey || this.clientKey.length == 0) {
       this.error('Missing Client Key');
       return false;
@@ -94,6 +94,8 @@ class CdpPersonalize {
       this.error('Missing Web Flow Target');
       return false;
     }
+
+    return true;
   };
 
   private error = (message: string) => {
