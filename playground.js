@@ -1,3 +1,4 @@
+const { cpSync } = require('fs');
 var package = require('./dist');
 var cdpPersonalize = package.cdpPersonalize;
 
@@ -8,3 +9,5 @@ cdpPersonalize.initialize(
   'pos',
   'flowTarget'
 );
+
+cdpPersonalize.getBrowserId();

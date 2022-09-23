@@ -6,4 +6,6 @@ The react-sitecore-cdp-personalize library is used to quickly integrate with Sit
 
 TBD
 
-THIS IS STILL A WORK IN PROCESS!
+## Boxever (CDP + Personalize) Javascript Library
+
+## Direct API calls
