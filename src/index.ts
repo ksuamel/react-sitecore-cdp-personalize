@@ -1,6 +1,3 @@
-import * as globalSupport from './boxever_ts_support';
-globalSupport.fix();
-
 class CdpPersonalize {
   private clientKey!: string;
   private targetApi!: string;
@@ -70,27 +67,27 @@ class CdpPersonalize {
   };
 
   private isInitialized = (): boolean => {
-    if (!this.clientKey || this.clientKey.length == 0) {
+    if (!this.clientKey || this.clientKey.length === 0) {
       this.error('Missing Client Key');
       return false;
     }
 
-    if (!this.targetApi || this.targetApi.length == 0) {
+    if (!this.targetApi || this.targetApi.length === 0) {
       this.error('Missing Target API');
       return false;
     }
 
-    if (!this.cookieDomain || this.cookieDomain.length == 0) {
+    if (!this.cookieDomain || this.cookieDomain.length === 0) {
       this.error('Missing Cookie Domain');
       return false;
     }
 
-    if (!this.pointOfSale || this.pointOfSale.length == 0) {
+    if (!this.pointOfSale || this.pointOfSale.length === 0) {
       this.error('Missing Point of Sale');
       return false;
     }
 
-    if (!this.webFlowTarget || this.webFlowTarget.length == 0) {
+    if (!this.webFlowTarget || this.webFlowTarget.length === 0) {
       this.error('Missing Web Flow Target');
       return false;
     }
