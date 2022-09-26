@@ -248,7 +248,7 @@ returns: a promise containing the client key.
 
 **getCookie**
 
-Used to retrieve cookie value. This only works for cookies set by Boxever (Sitecore CDP and Personalize) and cookies set by setCookie(). You must call initialize before using getCookie().
+Used to retrieve cookie value. This only works for cookies set by Boxever (Sitecore CDP and Personalize) and cookies set by setCookie() (setCookie coming soon). You must call initialize before using getCookie().
 
 ```ts
 cdpPersonalize.getCookie('bx_bucket_number').then(cookieValue => {
