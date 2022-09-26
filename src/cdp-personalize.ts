@@ -91,6 +91,31 @@ export class CdpPersonalize {
     });
   };
 
+  getClientKey = (): Promise<string> => {
+    return new Promise<string>(async resolve => {
+      this.waitForBoxever().then(() => {
+        resolve(window.Boxever.getClientKey());
+      });
+    });
+  };
+
+  getBucketNumber = (): Promise<string> => {
+    return new Promise<string>(resolve => {
+      window.Boxever.getBucketNumber(async () => {
+        const bucketNumber = await this.getCookie('bx_bucket_number');
+        resolve(bucketNumber);
+      });
+    });
+  };
+
+  getCookie = (cookieName: string): Promise<string> => {
+    return new Promise<string>(resolve => {
+      this.waitForBoxever().then(() => {
+        resolve(window.Boxever.getCookie(cookieName));
+      });
+    });
+  };
+
   identifyByEmail = (
     email: string,
     additionalData?: Record<string, unknown>
@@ -130,7 +155,7 @@ export class CdpPersonalize {
   ): Promise<EventCreateResponse> => {
     return new Promise<EventCreateResponse>(resolve => {
       this.waitForBoxever().then(async () => {
-        const eventPayload = {
+        let eventPayload = {
           page: window.location.pathname + window.location.search,
           currency: this.currency,
           pos: this.pointOfSale,
@@ -140,6 +165,7 @@ export class CdpPersonalize {
           ...event,
         };
 
+        window.Boxever.addUTMParams(eventPayload);
         window.Boxever.eventCreate(
           eventPayload,
           data => {
@@ -186,6 +212,22 @@ export class CdpPersonalize {
           data => resolve(data),
           'json'
         );
+      });
+    });
+  };
+
+  reset = (): Promise<void> => {
+    return new Promise<void>(() => {
+      this.waitForBoxever().then(async () => {
+        window.Boxever.reset();
+      });
+    });
+  };
+
+  triggerExperiences = (): Promise<void> => {
+    return new Promise<void>(() => {
+      this.waitForBoxever().then(async () => {
+        window.Boxever.triggerExperiences();
       });
     });
   };

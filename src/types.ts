@@ -20,6 +20,8 @@ export interface BrowserShowResponse {
 
 type BrowserShowCallbackType = (data: BrowserShowResponse) => void;
 
+type GetBucketNumberCallbackType = () => void;
+
 export interface Boxever {
   getID(): string;
   eventCreate(
@@ -52,6 +54,12 @@ export interface Boxever {
     callback: BrowserShowCallbackType,
     format: string
   ): void;
+  addUTMParams(event: Record<string, unknown>): void;
+  getBucketNumber(callback: GetBucketNumberCallbackType): void;
+  getCookie(cookieName: string): string;
+  getClientKey(): string;
+  reset(): void;
+  triggerExperiences(): void;
   browser_id: string;
   isITPBrowser: boolean;
   cookie_expires_days: number;

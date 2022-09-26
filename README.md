@@ -6,6 +6,8 @@ The sitecore-cdp-personalize library is used to quickly integrate with Boxever (
 
 - Typescript Support
 - Easy to use wrapper over Boxever (Sitecore CDP and Personalize) JavaScript Library
+- Retry mechanism to ensure Boxever is properly loaded
+- Promise-based
 
 # Usage
 
@@ -53,9 +55,24 @@ cdpPersonalize.eventCreate({
 
 ## Server Side (APIs)
 
-Side side calls have been split into a different package, sitecore-cdp-personalize-api.
+Server side calls have been split into a different package, sitecore-cdp-personalize-api.
 
 # Methods
+
+- initialize
+- trackPage
+- identifyByEmail
+- identifyByProvider
+- eventCreate
+- callFlows
+- browserShow
+- getBrowserId
+- getGuestRef
+- getBucketNumber
+- getClientKey
+- getCookie
+- reset
+- triggerExperiences
 
 **initialize**
 
@@ -128,6 +145,7 @@ Used to submit an event to CDP and Personalize. Internally, the library automati
 - browser_id
 - channel
 - language
+- UTM parameters from URL
 
 You must call initialize before using eventCreate().
 
@@ -178,7 +196,7 @@ returns: a promise containg the response from the flow, mapped to the type provi
 
 Used to get the user's information. You must call initialize before using browserShow().
 
-```js
+```ts
 cdpPersonalize.browserShow().then(data => console.log(data.customer));
 ```
 
@@ -188,7 +206,7 @@ returns: a promise containing the customer object.
 
 Used to get the user's current browserId. You must call initialize before using getBrowserId().
 
-```js
+```ts
 cdpPersonalize.getBrowserId().then(browserId => console.log(browserId));
 ```
 
@@ -198,8 +216,63 @@ returns: a promise containing the user's current browserId.
 
 Used to get the user's current guest reference. You must call initialize before using getGuestRef().
 
-```js
+```ts
 cdpPersonalize.getGuestRef().then(ref => console.log(ref));
 ```
 
 returns: a promise containing the user's guest reference.
+
+**getBucketNumber**
+
+Used to update the bucket number cookie to match the latest bucket number in Sitecore CDP. You should call this after an IDENTITY event.
+
+```ts
+cdpPersonalize.getBucketNumber().then(bucketNumber => {
+  console.log(bucketNumber);
+});
+```
+
+returns: a promise containing the user's updated bucket number.
+
+**getClientKey**
+
+Used to retrieve the client key. You must call initialize before using getClientKey().
+
+```ts
+cdpPersonalize.getClientKey().then(clientKey => {
+  console.log(clientKey);
+});
+```
+
+returns: a promise containing the client key.
+
+**getCookie**
+
+Used to retrieve cookie value. This only works for cookies set by Boxever (Sitecore CDP and Personalize) and cookies set by setCookie(). You must call initialize before using getCookie().
+
+```ts
+cdpPersonalize.getCookie('bx_bucket_number').then(cookieValue => {
+  console.log(cookieValue);
+});
+```
+
+returns: a promise containing the cookie's value.
+
+**reset**
+Used to reinitialize the Boxever (Sitecore CDP and Personalize) JavaScript Library. It will clear the event queue, deletes the browser ID and guest reference, and reloads the javascript library.
+
+```ts
+cdpPersonalize.reset().then(() => {
+  console.log('Values reset');
+});
+```
+
+**triggerExperiences**
+
+Used to rerun all the web experiences and experiments.
+
+```ts
+cdpPersonalize.triggerExperiences().then(() => {
+  console.log('Experiences triggered');
+});
+```

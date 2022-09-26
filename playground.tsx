@@ -8,25 +8,14 @@ cdpPersonalize.initialize(
   'flowTarget'
 );
 
-type customReponse = {
-  userInterest: String;
-  otherProperies: Boolean;
-};
+cdpPersonalize.getClientKey().then(clientKey => {
+  console.log(clientKey);
+});
 
-cdpPersonalize
-  .callFlows<customReponse>({
-    friendlyId: 'CDP_PERSONALIZE_FLOW_FRIENDLY_ID', // required
-    otherPropsYouNeed: 'example value', // optioanlly, send any other properties you need
-  })
-  .then(response => {
-    console.log(response.userInterest);
-  });
+cdpPersonalize.reset().then(() => {
+  console.log('Values reset');
+});
 
-cdpPersonalize.identifyByProvider(
-  'employee_id', // provider: required
-  '716251', // id: required
-  {
-    // optionally, send any additional properies you need
-    customProperties: 'example value',
-  }
-);
+cdpPersonalize.triggerExperiences().then(() => {
+  console.log('Experiences triggered');
+});
