@@ -12,7 +12,7 @@ The sitecore-cdp-personalize library is used to quickly integrate with Boxever (
 **Core Setup**
 
 ```js
-import { cdpPersonalize } from 'react-sitecore-cdp-personalize';
+import { cdpPersonalize } from 'sitecore-cdp-personalize';
 
 //Configure CDP and Personalize, and injects Boxever (CDP and Personalize) JavaScript Library into page
 cdpPersonalize.initialize(
