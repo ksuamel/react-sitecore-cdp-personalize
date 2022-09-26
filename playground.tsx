@@ -21,3 +21,12 @@ cdpPersonalize
   .then(response => {
     console.log(response.userInterest);
   });
+
+cdpPersonalize.identifyByProvider(
+  'employee_id', // provider: required
+  '716251', // id: required
+  {
+    // optionally, send any additional properies you need
+    customProperties: 'example value',
+  }
+);

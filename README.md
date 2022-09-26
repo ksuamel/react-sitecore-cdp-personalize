@@ -9,6 +9,12 @@ The sitecore-cdp-personalize library is used to quickly integrate with Boxever (
 
 # Usage
 
+**Installaion**
+
+```js
+npm install sitecore-cdp-personalize
+```
+
 **Core Setup**
 
 ```js
@@ -28,7 +34,7 @@ cdpPersonalize.initialize(
 );
 ```
 
-**Optional Methods**
+**Common methods**
 
 ```js
 //Identify Users
@@ -73,11 +79,40 @@ cdpPersonalize.initialize(
 
 Used to track the user navigating pages. If your application is a SPA, make sure to call this method every time the user navigates within your application. You must call initialize before using trackPage().
 
-```js
+```ts
 cdpPersonalize.trackPage().then(response => console.log(response.status));
 ```
 
 **returns**: a promise containing the HTTP status of the CDP and Perosnalize response.
+
+## identifyByEmail
+
+Used to identify a user using their email as the ID. You must call initialize before using identifyByEmail().
+
+```ts
+cdpPersonalize.identifyByEmail(
+  'example@email.com', // id: required
+  {
+    // optionally, send any additional properies you need
+    customProperties: 'example value',
+  }
+);
+```
+
+## identifyByProvider
+
+Used to identify a user using a custom identity provider and ID. You must call initialize before using identifyByProvider().
+
+```ts
+cdpPersonalize.identifyByProvider(
+  'employee_id', // provider: required
+  '716251', // id: required
+  {
+    // optionally, send any additional properies you need
+    customProperties: 'example value',
+  }
+);
+```
 
 ## eventCreate
 
