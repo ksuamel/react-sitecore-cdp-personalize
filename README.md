@@ -259,6 +259,7 @@ cdpPersonalize.getCookie('bx_bucket_number').then(cookieValue => {
 returns: a promise containing the cookie's value.
 
 **reset**
+
 Used to reinitialize the Boxever (Sitecore CDP and Personalize) JavaScript Library. It will clear the event queue, deletes the browser ID and guest reference, and reloads the javascript library.
 
 ```ts
