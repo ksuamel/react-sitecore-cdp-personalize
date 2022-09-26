@@ -57,7 +57,7 @@ Side side calls have been split into a different package, sitecore-cdp-personali
 
 # Methods
 
-## initialize
+**initialize**
 
 Used to configure what values CDP and Personalize is configured with. It also injects the Boxever (Sitecore CDP and Personalize) JavaScript Library into the head of the page. All other methods require that the initialize method is called at least once in the application.
 
@@ -75,7 +75,7 @@ cdpPersonalize.initialize(
 );
 ```
 
-## trackPage
+**trackPage**
 
 Used to track the user navigating pages. If your application is a SPA, make sure to call this method every time the user navigates within your application. You must call initialize before using trackPage().
 
@@ -83,9 +83,9 @@ Used to track the user navigating pages. If your application is a SPA, make sure
 cdpPersonalize.trackPage().then(response => console.log(response.status));
 ```
 
-**returns**: a promise containing the HTTP status of the CDP and Perosnalize response.
+returns: a promise containing the HTTP status of the CDP and Perosnalize response.
 
-## identifyByEmail
+**identifyByEmail**
 
 Used to identify a user using their email as the ID. You must call initialize before using identifyByEmail().
 
@@ -99,7 +99,9 @@ cdpPersonalize.identifyByEmail(
 );
 ```
 
-## identifyByProvider
+returns: a promise containing the HTTP status of the CDP and Perosnalize response.
+
+**identifyByProvider**
 
 Used to identify a user using a custom identity provider and ID. You must call initialize before using identifyByProvider().
 
@@ -114,7 +116,9 @@ cdpPersonalize.identifyByProvider(
 );
 ```
 
-## eventCreate
+returns: a promise containing the HTTP status of the CDP and Perosnalize response.
+
+**eventCreate**
 
 Used to submit an event to CDP and Personalize. Internally, the library automatically adds the following properties for you:
 
@@ -136,9 +140,9 @@ cdpPersonalize
   .then(response => console.log(response.status));
 ```
 
-**returns**: a promise containing the HTTP status of the CDP and Perosnalize response.
+returns: a promise containing the HTTP status of the CDP and Perosnalize response.
 
-## callFlows
+**callFlows**
 
 Used to execute a flow. Internally, the library automatically adds the following properties for you:
 
@@ -168,9 +172,9 @@ cdpPersonalize
   });
 ```
 
-**returns**: a promise containg the response from the flow, mapped to the type provided.
+returns: a promise containg the response from the flow, mapped to the type provided.
 
-## browserShow
+**browserShow**
 
 Used to get the user's information. You must call initialize before using browserShow().
 
@@ -178,9 +182,9 @@ Used to get the user's information. You must call initialize before using browse
 cdpPersonalize.browserShow().then(data => console.log(data.customer));
 ```
 
-**returns**: a promise containing the customer object.
+returns: a promise containing the customer object.
 
-## getBrowserId
+**getBrowserId**
 
 Used to get the user's current browserId. You must call initialize before using getBrowserId().
 
@@ -188,9 +192,9 @@ Used to get the user's current browserId. You must call initialize before using 
 cdpPersonalize.getBrowserId().then(browserId => console.log(browserId));
 ```
 
-**returns**: a promise containing the user's current browserId.
+returns: a promise containing the user's current browserId.
 
-## getGuestRef
+**getGuestRef**
 
 Used to get the user's current guest reference. You must call initialize before using getGuestRef().
 
@@ -198,4 +202,4 @@ Used to get the user's current guest reference. You must call initialize before 
 cdpPersonalize.getGuestRef().then(ref => console.log(ref));
 ```
 
-**returns**: a promise containing the user's guest reference.
+returns: a promise containing the user's guest reference.
