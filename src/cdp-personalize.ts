@@ -66,42 +66,8 @@ export class CdpPersonalize {
     if (langauge) {
       this.language = langauge;
     }
-  };
 
-  renderScript = (): void => {
-    if (!this.isInitialized) {
-      logError('Initialize before attempting to render the script.');
-    }
-
-    const scriptAlreadyRendered = document.getElementById(this.scriptId);
-    if (scriptAlreadyRendered) {
-      return;
-    }
-
-    const script = () => {
-      const script = document.createElement('script');
-      script.id = this.scriptId;
-      script.innerHTML = `
-        var _boxeverq = _boxeverq || [];
-    
-        var _boxever_settings = {
-            client_key: '${this.clientKey}',
-            target: '${this.targetApi}',
-            cookie_domain: '${this.cookieDomain}',
-            pointOfSale: '${this.pointOfSale}',
-            web_flow_target: '${this.webFlowTarget}',
-            web_flow_config: { async: false, defer: false }
-        };
-    
-        (function() {
-            var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; 
-            s.src = 'https://d1mj578wat5n4o.cloudfront.net/boxever-${this.libraryVersion}.min.js';\
-            var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
-        })();
-      `;
-      return script;
-    };
-    document.body.appendChild(script());
+    this.renderScript();
   };
 
   trackPage = (): Promise<EventCreateResponse> => {
@@ -185,6 +151,31 @@ export class CdpPersonalize {
     });
   };
 
+  callFlows = <T>(flow: Record<string, unknown>): Promise<T> => {
+    return new Promise<T>(async resolve => {
+      this.waitForBoxever().then(async () => {
+        const flowPayload = {
+          page: window.location.pathname + window.location.search,
+          currency: this.currency,
+          pos: this.pointOfSale,
+          browser_id: await this.getBrowserId(),
+          channel: this.channel,
+          language: this.language,
+          clientKey: this.clientKey,
+          ...flow,
+        };
+
+        window.Boxever.callFlows(
+          flowPayload,
+          data => {
+            resolve(data as T);
+          },
+          'json'
+        );
+      });
+    });
+  };
+
   browserShow = async (browserId?: string): Promise<BrowserShowResponse> => {
     return new Promise<BrowserShowResponse>(resolve => {
       this.waitForBoxever().then(async () => {
@@ -240,5 +231,41 @@ export class CdpPersonalize {
 
       resolve();
     });
+  };
+
+  private renderScript = (): void => {
+    if (!this.isInitialized) {
+      logError('Initialize before attempting to render the script.');
+    }
+
+    const scriptAlreadyRendered = document.getElementById(this.scriptId);
+    if (scriptAlreadyRendered) {
+      return;
+    }
+
+    const script = () => {
+      const script = document.createElement('script');
+      script.id = this.scriptId;
+      script.innerHTML = `
+        var _boxeverq = _boxeverq || [];
+    
+        var _boxever_settings = {
+            client_key: '${this.clientKey}',
+            target: '${this.targetApi}',
+            cookie_domain: '${this.cookieDomain}',
+            pointOfSale: '${this.pointOfSale}',
+            web_flow_target: '${this.webFlowTarget}',
+            web_flow_config: { async: false, defer: false }
+        };
+    
+        (function() {
+            var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; 
+            s.src = 'https://d1mj578wat5n4o.cloudfront.net/boxever-${this.libraryVersion}.min.js';\
+            var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+        })();
+      `;
+      return script;
+    };
+    document.body.appendChild(script());
   };
 }
