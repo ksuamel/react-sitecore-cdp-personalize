@@ -33,6 +33,10 @@
   },
   "name": "sitecore-cdp-personalize",
   "author": "Kevin Suarez Melendez",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ksuamel/sitecore-cdp-personalize"
+  },
   "module": "dist/sitecore-cdp-personalize.esm.js",
   "size-limit": [
     {
